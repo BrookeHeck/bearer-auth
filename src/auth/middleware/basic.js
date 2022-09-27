@@ -1,17 +1,19 @@
 'use strict';
 
 const base64 = require('base-64');
-const { user } = require('./../models');
+const { users } = require('./../models');
 
 module.exports = async (req, res, next) => {
   try {
     if (!req.headers.authorization) { throw new Error('No username or password') }
 
-    let basic = req.headers.authorization;
-    console.log(req.headers.authorization);
-    let [username, pass] = base64.decode(basic).split(':');
+    let basicHeaderParts = req.headers.authorization.split(' ');  // ['Basic', 'sdkjdsljd=']
+    let encodedString = basicHeaderParts.pop();  // sdkjdsljd=
+    let decodedString = base64.decode(encodedString); // "username:password"
+    let [username, pass] = decodedString.split(':'); // username, password
 
-    req.user = await user.authenticateBasic(username, pass)
+    req.user = await users.authenticateBasic(username, pass);
+    console.log(req.user);
     next();
   } catch (e) {
     console.error(e);

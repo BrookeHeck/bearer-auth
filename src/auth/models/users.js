@@ -26,17 +26,20 @@ const userSchema = (sequelize, DataTypes) => {
 
   // Basic AUTH: Validating strings (username, password) 
   model.authenticateBasic = async function (username, password) {
-    const user = await this.findOne({ username })
-    const valid = await bcrypt.compare(password, user.password)
-    if (valid) { return user; }
-    throw new Error('Invalid User');
+    try {
+      const user = await this.findOne({where: {username: username} });
+      const valid = await bcrypt.compare(password, user.password);
+      if (valid) { return user; }
+    } catch(e) {
+      throw new Error(e);
+    }
   }
 
   // Bearer AUTH: Validating a token
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, API_SECRET);
-      const user = this.findOne({ username: parsedToken.username })
+      const user = this.findOne( { where: { username: parsedToken.username } });
       if (user) { return user; }
       throw new Error("User Not Found");
     } catch (e) {
