@@ -1,6 +1,6 @@
 'use strict';
 
-const { users } = require('../models/index.js');
+const { users } = require('./../models');
 
 module.exports = async (req, res, next) => {
 
@@ -13,6 +13,7 @@ module.exports = async (req, res, next) => {
 
     req.user = validUser;
     req.token = validUser.token;
+    next();
 
   } catch (e) {
     console.error(e);

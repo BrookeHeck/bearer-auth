@@ -1,6 +1,8 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const API_SECRET = process.env.API_SECRET || 'CHANGE_ME';
 
 const userSchema = (sequelize, DataTypes) => {
   const model = sequelize.define('User', {
@@ -9,7 +11,10 @@ const userSchema = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.VIRTUAL,
       get() {
-        return jwt.sign({ username: this.username });
+        return jwt.sign({ username: this.username }, API_SECRET);
+      },
+      set(payload) {
+        return jwt.sign(payload, API_SECRET);
       }
     }
   });
@@ -30,7 +35,7 @@ const userSchema = (sequelize, DataTypes) => {
   // Bearer AUTH: Validating a token
   model.authenticateToken = async function (token) {
     try {
-      const parsedToken = jwt.verify(token, process.env.SECRET);
+      const parsedToken = jwt.verify(token, API_SECRET);
       const user = this.findOne({ username: parsedToken.username })
       if (user) { return user; }
       throw new Error("User Not Found");

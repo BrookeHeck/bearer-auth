@@ -2,9 +2,9 @@
 
 process.env.SECRET = "TEST_SECRET";
 
-const { db } = require('../../../../src/auth/models');
+const { db } = require('./../../../../src/auth/models');
 const supertest = require('supertest');
-const server = require('../../../../src/server.js').server;
+const server = require('./../../../../src/server').app;
 
 const mockRequest = supertest(server);
 
@@ -24,7 +24,8 @@ describe('Auth Router', () => {
 
   it('Can create a new user', async () => {
 
-    const response = await mockRequest.post('/signup').send(userData.testUser);
+    const response = await mockRequest.post('/signup')
+      .send(userData.testUser);
     const userObject = response.body;
 
     expect(response.status).toBe(201);
@@ -67,7 +68,7 @@ describe('Auth Router', () => {
   it('basic fails with known user and wrong password ', async () => {
 
     const response = await mockRequest.post('/signin')
-      .auth('admin', 'xyz')
+      .auth('admin', 'xyz');
     const { user, token } = response.body;
 
     expect(response.status).toBe(403);
@@ -79,7 +80,7 @@ describe('Auth Router', () => {
   it('basic fails with unknown user', async () => {
 
     const response = await mockRequest.post('/signin')
-      .auth('nobody', 'xyz')
+      .auth('nobody', 'xyz');
     const { user, token } = response.body;
 
     expect(response.status).toBe(403);
@@ -92,7 +93,7 @@ describe('Auth Router', () => {
 
     // First, use basic to login to get a token
     const response = await mockRequest.get('/users')
-      .set('Authorization', `Bearer foobar`)
+      .set('Authorization', `Bearer foobar`);
     const userList = response.body;
 
     // Not checking the value of the response, only that we "got in"
