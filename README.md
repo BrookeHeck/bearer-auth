@@ -1,4 +1,4 @@
-# API Server
+# Bearer Auth Server
 
 **Author**: Brooke Heck
 
