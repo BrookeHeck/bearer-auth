@@ -1,6 +1,15 @@
 'use strict';
 
+const { db, } = require('./../../../../../src/auth/models');
 const { handleSecret } = require('./../../../../../src/auth/router/handlers');
+
+beforeAll(async () => {
+  await db.sync();
+});
+afterAll(async () => {
+  await db.drop();
+});
+
 
 describe('testing the users route handler', () => {
 
@@ -16,6 +25,6 @@ describe('testing the users route handler', () => {
 
     handleSecret(req, res, next);
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.send).toHaveBeenCalledWith(expect.anything());
+    expect(res.json).toHaveBeenCalledWith(expect.anything());
   });
 });

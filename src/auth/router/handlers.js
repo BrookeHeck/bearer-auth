@@ -41,7 +41,12 @@ async function handleGetUsers(req, res, next) {
 }
 
 function handleSecret(req, res, next) {
-  res.status(200).json({secret:"Welcome to the secret area!"});
+  try {
+    res.status(200).json({secret:"Welcome to the secret area!"});
+  } catch(e) {
+    console.log(e);
+    next(e);
+  }
 }
 
 module.exports = {

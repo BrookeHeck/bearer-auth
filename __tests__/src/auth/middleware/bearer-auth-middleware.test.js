@@ -46,7 +46,7 @@ describe('Auth Middleware', () => {
 
     });
 
-    it('logs in a user with a proper token', () => {
+    it('logs in a user with a proper token', async () => {
 
       const user = { username: 'admin' };
       const token = jwt.sign(user, API_SECRET);
@@ -55,10 +55,8 @@ describe('Auth Middleware', () => {
         authorization: `Bearer ${token}`,
       };
 
-      return bearer(req, res, next)
-        .then(() => {
-          expect(next).toHaveBeenCalledWith();
-        });
+      await bearer(req, res, next);
+      expect(next).toHaveBeenCalledWith();
 
     });
   });
