@@ -1,10 +1,10 @@
 'use strict';
 
-process.env.SECRET = "TEST_SECRET";
-
 const bearer = require('./../../../../src/auth/middleware/bearer');
 const { db, users } = require('./../../../../src/auth/models');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const API_SECRET = process.env.API_SECRET || 'CHANGE_ME';
 
 let userInfo = {
   admin: { username: 'admin', password: 'password' },
@@ -49,7 +49,7 @@ describe('Auth Middleware', () => {
     it('logs in a user with a proper token', () => {
 
       const user = { username: 'admin' };
-      const token = jwt.sign(user, process.env.SECRET);
+      const token = jwt.sign(user, API_SECRET);
 
       req.headers = {
         authorization: `Bearer ${token}`,

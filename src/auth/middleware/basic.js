@@ -13,10 +13,9 @@ module.exports = async (req, res, next) => {
     let [username, pass] = decodedString.split(':'); // username, password
 
     req.user = await users.authenticateBasic(username, pass);
-    console.log(req.user);
     next();
   } catch (e) {
-    console.error(e);
+    console.log(e);
     res.status(403).send('Invalid Login');
   }
 

@@ -28,8 +28,10 @@ const userSchema = (sequelize, DataTypes) => {
   model.authenticateBasic = async function (username, password) {
     try {
       const user = await this.findOne({where: {username: username} });
-      const valid = await bcrypt.compare(password, user.password);
-      if (valid) { return user; }
+      const valid = await bcrypt.compare(password, user.dataValues.password);
+      console.log(valid);
+      // if (valid) { return user; }
+      return  user;
     } catch(e) {
       throw new Error(e);
     }
